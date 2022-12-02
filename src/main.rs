@@ -1,4 +1,5 @@
 mod day1;
+mod day2;
 
 use std::path::PathBuf;
 
@@ -17,9 +18,13 @@ struct Cli {
 #[derive(Debug, Subcommand)]
 enum Command {
     /// Completes day 1 task A
-    Day1A { file: PathBuf },
+    Day1A { path: PathBuf },
     /// Completes day 1 task B
-    Day1B { file: PathBuf },
+    Day1B { path: PathBuf },
+    /// Completes day 2 task A
+    Day2A { path: PathBuf },
+    /// Completes day 2 task B
+    Day2B { path: PathBuf },
 }
 
 fn main() {
@@ -30,8 +35,10 @@ fn main() {
         .init();
 
     if let Err(err) = match cli.command {
-        Command::Day1A { file } => day1::solve_a(file),
-        Command::Day1B { file } => day1::solve_b(file),
+        Command::Day1A { path: file } => day1::solve_a(file),
+        Command::Day1B { path: file } => day1::solve_b(file),
+        Command::Day2A { path: file } => day2::solve(file, false),
+        Command::Day2B { path: file } => day2::solve(file, true),
     } {
         log::error!("An error occurred while running the command: {err}");
     };

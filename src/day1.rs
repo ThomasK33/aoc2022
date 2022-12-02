@@ -14,7 +14,7 @@ pub(crate) fn solve_a(path: PathBuf) -> Result<()> {
             calories.push(counter);
             counter = 0;
         } else {
-            let number = usize::from_str_radix(line, 10)?;
+            let number = line.parse::<usize>()?;
             counter += number;
         }
     }
@@ -48,7 +48,7 @@ pub(crate) fn solve_b(path: PathBuf) -> Result<()> {
             calories.push(counter);
             counter = 0;
         } else {
-            let number = usize::from_str_radix(line, 10)?;
+            let number = line.parse::<usize>()?;
             counter += number;
         }
     }
@@ -59,7 +59,7 @@ pub(crate) fn solve_b(path: PathBuf) -> Result<()> {
     calories.sort_by(|a, b| b.cmp(a));
     log::debug!("Calories vec sorted: {calories:?}");
 
-    let highest_calory_count: usize = calories[0..3].to_vec().into_iter().sum();
+    let highest_calory_count: usize = calories[0..3].iter().sum();
     log::info!("The most calories carried by three elves are: {highest_calory_count}",);
 
     Ok(())
