@@ -1,5 +1,6 @@
 mod day1;
 mod day2;
+mod day3;
 
 use std::path::PathBuf;
 
@@ -25,6 +26,10 @@ enum Command {
     Day2A { path: PathBuf },
     /// Completes day 2 task B
     Day2B { path: PathBuf },
+    /// Completes day 3 task A
+    Day3A { path: PathBuf },
+    /// Completes day 3 task B
+    Day3B { path: PathBuf },
 }
 
 fn main() {
@@ -39,6 +44,8 @@ fn main() {
         Command::Day1B { path: file } => day1::solve_b(file),
         Command::Day2A { path: file } => day2::solve(file, false),
         Command::Day2B { path: file } => day2::solve(file, true),
+        Command::Day3A { path: file } => day3::solve(file),
+        Command::Day3B { path: file } => day3::solve_b(file),
     } {
         log::error!("An error occurred while running the command: {err}");
     };
