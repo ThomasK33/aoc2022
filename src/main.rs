@@ -2,6 +2,7 @@ mod day1;
 mod day2;
 mod day3;
 mod day4;
+mod day5;
 
 use std::path::PathBuf;
 
@@ -33,6 +34,10 @@ enum Command {
     Day3B { path: PathBuf },
     /// Completes day 4 tasks
     Day4 { path: PathBuf },
+    /// Completes day 5 task A
+    Day5A { path: PathBuf },
+    /// Completes day 5 task B
+    Day5B { path: PathBuf },
 }
 
 fn main() {
@@ -43,13 +48,15 @@ fn main() {
         .init();
 
     if let Err(err) = match cli.command {
-        Command::Day1A { path: file } => day1::solve_a(file),
-        Command::Day1B { path: file } => day1::solve_b(file),
-        Command::Day2A { path: file } => day2::solve(file, false),
-        Command::Day2B { path: file } => day2::solve(file, true),
-        Command::Day3A { path: file } => day3::solve(file),
-        Command::Day3B { path: file } => day3::solve_b(file),
-        Command::Day4 { path: file } => day4::solve(file),
+        Command::Day1A { path } => day1::solve_a(path),
+        Command::Day1B { path } => day1::solve_b(path),
+        Command::Day2A { path } => day2::solve(path, false),
+        Command::Day2B { path } => day2::solve(path, true),
+        Command::Day3A { path } => day3::solve(path),
+        Command::Day3B { path } => day3::solve_b(path),
+        Command::Day4 { path } => day4::solve(path),
+        Command::Day5A { path } => day5::solve(path, true),
+        Command::Day5B { path } => day5::solve(path, false),
     } {
         log::error!("An error occurred while running the command: {err}");
     };
