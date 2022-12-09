@@ -14,8 +14,6 @@ pub(crate) fn solve(path: PathBuf, knot_count: usize) -> Result<()> {
 
     let mut unique_tail_pos: HashSet<(i32, i32)> = HashSet::new();
 
-    let mut debug_counter = 0;
-
     for (direction, steps) in instructions {
         for _ in 0..steps {
             if let Some(pos_head) = pos_knots.first_mut() {
@@ -62,9 +60,6 @@ pub(crate) fn solve(path: PathBuf, knot_count: usize) -> Result<()> {
             if let Some(pos_tail) = pos_knots.last() {
                 unique_tail_pos.insert(*pos_tail);
             }
-
-            log::trace!("{debug_counter}: pos_knots: {pos_knots:?}");
-            debug_counter += 1;
         }
     }
 
