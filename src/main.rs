@@ -6,6 +6,7 @@ mod day5;
 mod day6;
 mod day7;
 mod day8;
+mod day9;
 
 use std::path::PathBuf;
 
@@ -49,6 +50,8 @@ enum Command {
     Day7 { path: PathBuf },
     /// Completes day 8
     Day8 { path: PathBuf },
+    /// Completes day 9
+    Day9 { knot_count: usize, path: PathBuf },
 }
 
 fn main() {
@@ -72,6 +75,7 @@ fn main() {
         Command::Day6B { path } => day6::solve(path, 14),
         Command::Day7 { path } => day7::solve(path),
         Command::Day8 { path } => day8::solve(path),
+        Command::Day9 { path, knot_count } => day9::solve(path, knot_count),
     } {
         log::error!("An error occurred while running the command: {err}");
     };

@@ -6,7 +6,7 @@ use std::{
 };
 
 use anyhow::Result;
-use chumsky::{prelude::*, Parser};
+use chumsky::prelude::*;
 
 pub(crate) fn solve(path: PathBuf) -> Result<()> {
     let file = std::fs::read_to_string(path)?;
