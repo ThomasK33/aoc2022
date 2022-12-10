@@ -1,4 +1,5 @@
 mod day1;
+mod day10;
 mod day2;
 mod day3;
 mod day4;
@@ -52,6 +53,8 @@ enum Command {
     Day8 { path: PathBuf },
     /// Completes day 9
     Day9 { knot_count: usize, path: PathBuf },
+    /// Completes day 10
+    Day10 { path: PathBuf },
 }
 
 fn main() {
@@ -76,6 +79,7 @@ fn main() {
         Command::Day7 { path } => day7::solve(path),
         Command::Day8 { path } => day8::solve(path),
         Command::Day9 { path, knot_count } => day9::solve(path, knot_count),
+        Command::Day10 { path } => day10::solve(path),
     } {
         log::error!("An error occurred while running the command: {err}");
     };
