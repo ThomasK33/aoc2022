@@ -1,5 +1,6 @@
 mod day1;
 mod day10;
+mod day11;
 mod day2;
 mod day3;
 mod day4;
@@ -55,6 +56,14 @@ enum Command {
     Day9 { knot_count: usize, path: PathBuf },
     /// Completes day 10
     Day10 { path: PathBuf },
+    /// Completes day 11
+    Day11 {
+        rounds: u32,
+        /// Indicator wether worry levels decrease by a division of 3 or not
+        #[clap(long, short, action)]
+        decreasing_worry_levels: bool,
+        path: PathBuf,
+    },
 }
 
 fn main() {
@@ -80,6 +89,11 @@ fn main() {
         Command::Day8 { path } => day8::solve(path),
         Command::Day9 { path, knot_count } => day9::solve(path, knot_count),
         Command::Day10 { path } => day10::solve(path),
+        Command::Day11 {
+            path,
+            rounds,
+            decreasing_worry_levels,
+        } => day11::solve(path, rounds, decreasing_worry_levels),
     } {
         log::error!("An error occurred while running the command: {err}");
     };
