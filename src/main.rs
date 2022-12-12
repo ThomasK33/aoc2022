@@ -1,6 +1,7 @@
 mod day1;
 mod day10;
 mod day11;
+mod day12;
 mod day2;
 mod day3;
 mod day4;
@@ -64,6 +65,8 @@ enum Command {
         decreasing_worry_levels: bool,
         path: PathBuf,
     },
+    /// Completes day 12
+    Day12 { path: PathBuf },
 }
 
 fn main() {
@@ -94,6 +97,7 @@ fn main() {
             rounds,
             decreasing_worry_levels,
         } => day11::solve(path, rounds, decreasing_worry_levels),
+        Command::Day12 { path } => day12::solve(path),
     } {
         log::error!("An error occurred while running the command: {err}");
     };
