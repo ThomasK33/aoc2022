@@ -3,6 +3,7 @@ mod day10;
 mod day11;
 mod day12;
 mod day13;
+mod day14;
 mod day2;
 mod day3;
 mod day4;
@@ -70,6 +71,8 @@ enum Command {
     Day12 { path: PathBuf },
     /// Completes day 13
     Day13 { path: PathBuf },
+    /// Completes day 14
+    Day14 { path: PathBuf },
 }
 
 fn main() {
@@ -102,6 +105,7 @@ fn main() {
         } => day11::solve(path, rounds, decreasing_worry_levels),
         Command::Day12 { path } => day12::solve(path),
         Command::Day13 { path } => day13::solve(path),
+        Command::Day14 { path } => day14::solve(path),
     } {
         log::error!("An error occurred while running the command: {err}");
     };
