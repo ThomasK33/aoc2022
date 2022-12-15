@@ -52,16 +52,16 @@ pub(crate) fn solve(path: PathBuf, y: i32, xy_limit: i32) -> Result<()> {
                     let delta_x = (distance - s_y.abs_diff(y)) as i32;
 
                     if delta_x >= 0 {
-                        Some((s_x - delta_x)..=(s_x + delta_x))
+                        Some(((s_x - delta_x), (s_x + delta_x)))
                     } else {
                         None
                     }
                 })
                 .sorted_by(|a, b| {
-                    let cmp = a.start().cmp(b.start());
+                    let cmp = a.0.cmp(&(b.0));
 
                     if Ordering::Equal == cmp {
-                        a.end().cmp(b.end())
+                        a.1.cmp(&(b.1))
                     } else {
                         cmp
                     }
@@ -75,12 +75,12 @@ pub(crate) fn solve(path: PathBuf, y: i32, xy_limit: i32) -> Result<()> {
                 return None;
             };
 
-            let mut min = *range.start();
-            let mut max = *range.end();
+            let mut min = range.0;
+            let mut max = range.1;
 
             for range in ranges {
-                let start = *range.start();
-                let end = *range.end();
+                let start = range.0;
+                let end = range.1;
 
                 if (min <= start && start <= max) || (min <= start - 1 && start - 1 <= max) {
                     min = min.min(start);
