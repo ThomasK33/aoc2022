@@ -4,6 +4,7 @@ mod day11;
 mod day12;
 mod day13;
 mod day14;
+mod day15;
 mod day2;
 mod day3;
 mod day4;
@@ -73,6 +74,14 @@ enum Command {
     Day13 { path: PathBuf },
     /// Completes day 14
     Day14 { path: PathBuf },
+    /// Completes day 15
+    Day15 {
+        path: PathBuf,
+        #[clap(default_value_t = 2000000)]
+        y: i32,
+        #[clap(default_value_t = 4000000)]
+        xy_limit: i32,
+    },
 }
 
 fn main() {
@@ -106,6 +115,7 @@ fn main() {
         Command::Day12 { path } => day12::solve(path),
         Command::Day13 { path } => day13::solve(path),
         Command::Day14 { path } => day14::solve(path),
+        Command::Day15 { path, y, xy_limit } => day15::solve(path, y, xy_limit),
     } {
         log::error!("An error occurred while running the command: {err}");
     };
