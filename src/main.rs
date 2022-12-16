@@ -5,6 +5,7 @@ mod day12;
 mod day13;
 mod day14;
 mod day15;
+mod day16;
 mod day2;
 mod day3;
 mod day4;
@@ -82,6 +83,8 @@ enum Command {
         #[clap(default_value_t = 4000000)]
         xy_limit: i32,
     },
+    /// Completes day 16
+    Day16 { path: PathBuf },
 }
 
 fn main() {
@@ -116,6 +119,7 @@ fn main() {
         Command::Day13 { path } => day13::solve(path),
         Command::Day14 { path } => day14::solve(path),
         Command::Day15 { path, y, xy_limit } => day15::solve(path, y, xy_limit),
+        Command::Day16 { path } => day16::solve(path),
     } {
         log::error!("An error occurred while running the command: {err}");
     };
