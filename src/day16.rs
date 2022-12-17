@@ -4,6 +4,7 @@ use anyhow::Result;
 use chumsky::prelude::*;
 use itertools::Itertools;
 use petgraph::{algo::floyd_warshall, prelude::*};
+use rayon::prelude::*;
 
 pub(crate) fn solve(path: PathBuf) -> Result<()> {
     let file = std::fs::read_to_string(path)?;
@@ -64,9 +65,126 @@ pub(crate) fn solve(path: PathBuf) -> Result<()> {
     let Some((high_score, path)) = find_highest_rated_path(&paths) else { anyhow::bail!("Could not find the highest rated path") };
     log::info!("task 1: high_score: {high_score} - path: {path}");
 
-    // -- TODO: Task 2 --
+    // -- Task 2 --
+
+    // Unfortunately, this doesn't work correctly
+    let result = walk_the_graph_together(
+        parsed_file.iter().filter(|valve| valve.rate > 0).collect(),
+        &shortest_paths,
+        &nodes,
+        26,
+        26,
+        "AA",
+        "AA",
+    );
+    log::info!("task 2 result: {result}");
 
     Ok(())
+}
+
+fn walk_the_graph_together(
+    valves: Vec<&Valve>,
+    shortest_paths: &HashMap<(NodeIndex, NodeIndex), i32>,
+    nodes: &HashMap<&str, NodeIndex>,
+    me_time: i32,
+    elephant_time: i32,
+    my_location: &str,
+    elephant_location: &str,
+) -> i32 {
+    if valves.len() == 0 {
+        return 0;
+    }
+
+    // let scores = get_rated_valves(valves.iter(), &shortest_paths, &nodes, me_time, my_location);
+    let scores_elephant = get_rated_valves(
+        valves.iter(),
+        &shortest_paths,
+        &nodes,
+        elephant_time,
+        elephant_location,
+    );
+
+    scores_elephant
+        .into_par_iter()
+        .flat_map(|elephant_score| {
+            get_rated_valves(
+                valves
+                    .iter()
+                    .filter(|valve| valve.id != elephant_score.valve_id)
+                    .map(|a| *a)
+                    .collect::<Vec<_>>()
+                    .iter(),
+                shortest_paths,
+                nodes,
+                me_time,
+                my_location,
+            )
+            .into_iter()
+            .map(|me_score| (elephant_score.clone(), me_score))
+            .collect::<Vec<_>>()
+        })
+        .map(|(e_score, my_score)| {
+            my_score.rating
+                + e_score.rating
+                + walk_the_graph_together(
+                    valves
+                        .iter()
+                        .filter(|valve| {
+                            valve.id != my_score.valve_id && valve.id != e_score.valve_id
+                        })
+                        .map(|a| *a)
+                        .collect::<Vec<_>>(),
+                    shortest_paths,
+                    nodes,
+                    my_score.time_left,
+                    e_score.time_left,
+                    &my_score.valve_id,
+                    &e_score.valve_id,
+                )
+        })
+        .max()
+        .unwrap_or(0)
+
+    // scores
+    //     .into_par_iter()
+    //     .flat_map(|me_score| {
+    //         get_rated_valves(
+    //             valves
+    //                 .iter()
+    //                 .filter(|valve| valve.id != me_score.valve_id)
+    //                 .map(|a| *a)
+    //                 .collect::<Vec<_>>()
+    //                 .iter(),
+    //             shortest_paths,
+    //             nodes,
+    //             elephant_time,
+    //             elephant_location,
+    //         )
+    //         .into_iter()
+    //         .map(|elephant_score| (me_score.clone(), elephant_score))
+    //         .collect::<Vec<_>>()
+    //     })
+    //     .map(|(my_score, e_score)| {
+    //         my_score.rating
+    //             + e_score.rating
+    //             + walk_the_graph_together(
+    //                 valves
+    //                     .iter()
+    //                     .filter(|valve| {
+    //                         valve.id != my_score.valve_id && valve.id != e_score.valve_id
+    //                     })
+    //                     .map(|a| *a)
+    //                     .collect::<Vec<_>>(),
+    //                 shortest_paths,
+    //                 nodes,
+    //                 my_score.time_left,
+    //                 e_score.time_left,
+    //                 &my_score.valve_id,
+    //                 &e_score.valve_id,
+    //             )
+    //     })
+    //     .max()
+    //     .unwrap_or(0)
 }
 
 #[derive(Debug)]
@@ -148,6 +266,7 @@ fn get_rated_paths(
     }
 }
 
+#[derive(Clone, Debug)]
 struct ValveRating {
     rating: i32,
     time_left: i32,
