@@ -62,8 +62,12 @@ pub(crate) fn solve(path: PathBuf) -> Result<()> {
             let (start, end) = pair;
 
             for x in start.0.min(end.0)..=end.0.max(start.0) {
-                for y in start.1.min(end.1)..=end.1.max(start.1) {
-                    grid[y][x + offset - min_x] = Entry::Rock;
+                for item in grid
+                    .iter_mut()
+                    .take(end.1.max(start.1) + 1)
+                    .skip(start.1.min(end.1))
+                {
+                    item[x + offset - min_x] = Entry::Rock;
                 }
             }
         }

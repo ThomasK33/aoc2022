@@ -36,7 +36,7 @@ pub(crate) fn solve(path: PathBuf) -> Result<()> {
             let Some(current_node) = nodes.get(id) else { return vec![]; };
 
             next_node_ids
-                .into_iter()
+                .iter()
                 .filter_map(|next_node_id| {
                     let Some(next_node) = nodes.get(&**next_node_id) else {return None};
 
@@ -91,15 +91,15 @@ fn walk_the_graph_together(
     my_location: &str,
     elephant_location: &str,
 ) -> i32 {
-    if valves.len() == 0 {
+    if valves.is_empty() {
         return 0;
     }
 
     // let scores = get_rated_valves(valves.iter(), &shortest_paths, &nodes, me_time, my_location);
     let scores_elephant = get_rated_valves(
         valves.iter(),
-        &shortest_paths,
-        &nodes,
+        shortest_paths,
+        nodes,
         elephant_time,
         elephant_location,
     );
@@ -111,7 +111,7 @@ fn walk_the_graph_together(
                 valves
                     .iter()
                     .filter(|valve| valve.id != elephant_score.valve_id)
-                    .map(|a| *a)
+                    .copied()
                     .collect::<Vec<_>>()
                     .iter(),
                 shortest_paths,
@@ -132,7 +132,7 @@ fn walk_the_graph_together(
                         .filter(|valve| {
                             valve.id != my_score.valve_id && valve.id != e_score.valve_id
                         })
-                        .map(|a| *a)
+                        .copied()
                         .collect::<Vec<_>>(),
                     shortest_paths,
                     nodes,
@@ -195,7 +195,7 @@ struct Path {
 }
 
 fn find_highest_rated_path(paths: &Vec<Path>) -> Option<(i32, String)> {
-    if paths.len() == 0 {
+    if paths.is_empty() {
         return None;
     }
 
@@ -225,16 +225,16 @@ fn get_rated_paths(
         valves
             .iter()
             .filter(|valve| !visited_valve_ids.contains(&valve.id.clone()))
-            .map(|a| *a)
+            .copied()
             .collect::<Vec<_>>()
             .iter(),
-        &shortest_paths,
-        &nodes,
+        shortest_paths,
+        nodes,
         time,
         current_node,
     );
 
-    if scores.len() == 0 {
+    if scores.is_empty() {
         vec![]
     } else {
         scores
@@ -248,15 +248,15 @@ fn get_rated_paths(
                     rating,
                     valve_id: valve_id.clone(),
                     paths: get_rated_paths(
-                        valves.iter().map(|a| *a).collect(),
+                        valves.to_vec(),
                         {
                             let mut visited_valves = visited_valve_ids.clone();
                             visited_valves.push(valve_id.clone());
 
                             visited_valves
                         },
-                        &shortest_paths,
-                        &nodes,
+                        shortest_paths,
+                        nodes,
                         time_left,
                         &valve_id,
                     ),

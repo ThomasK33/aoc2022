@@ -74,8 +74,7 @@ pub(crate) fn solve(path: PathBuf) -> Result<()> {
     log::debug!("total_folder_size_map: {total_folder_size_map:#?}");
 
     let task_a: usize = total_folder_size_map
-        .iter()
-        .map(|(_, size)| size)
+        .values()
         .filter(|&&size| size < 100000)
         .sum();
     log::info!("Task a solution: {task_a}");
@@ -91,8 +90,8 @@ pub(crate) fn solve(path: PathBuf) -> Result<()> {
     log::debug!("additional_free_space_needed: {additional_free_space_needed}");
 
     let task_b = total_folder_size_map
-        .iter()
-        .map(|(_, size)| *size)
+        .values()
+        .copied()
         .filter(|&size| size >= additional_free_space_needed)
         .min()
         .unwrap_or_default();

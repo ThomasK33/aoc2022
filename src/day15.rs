@@ -70,7 +70,7 @@ pub(crate) fn solve(path: PathBuf, y: i32, xy_limit: i32) -> Result<()> {
             (y, ranges)
         })
         .filter_map(|(y, ranges)| {
-            let mut ranges = ranges.clone();
+            let mut ranges = ranges;
             let Some(range) = ranges.next() else {
                 return None;
             };
@@ -82,7 +82,7 @@ pub(crate) fn solve(path: PathBuf, y: i32, xy_limit: i32) -> Result<()> {
                 let start = range.0;
                 let end = range.1;
 
-                if (min <= start && start <= max) || (min <= start - 1 && start - 1 <= max) {
+                if (min <= start && start <= max) || (min < start && start - 1 <= max) {
                     min = min.min(start);
                     max = max.max(end);
                 } else {
@@ -90,7 +90,7 @@ pub(crate) fn solve(path: PathBuf, y: i32, xy_limit: i32) -> Result<()> {
                 }
             }
 
-            return None;
+            None
         })
         .collect();
 

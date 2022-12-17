@@ -97,13 +97,7 @@ impl Ord for List {
                     };
                 }
 
-                if self_list.len() < other_list.len() {
-                    Ordering::Less
-                } else if self_list.len() == other_list.len() {
-                    Ordering::Equal
-                } else {
-                    Ordering::Greater
-                }
+                self_list.len().cmp(&other_list.len())
             }
         }
     }
